@@ -45,7 +45,7 @@ namespace LcbRemote
             try
             {
                 if (_params.Count > 0
-                    && HandleParam0(_params))
+                    && HandleParam0(_params, _senderInfo))
                 {
                     return;
                 }
@@ -57,7 +57,7 @@ namespace LcbRemote
             }
         }
 
-        private bool HandleParam0(List<string> _params)
+        private bool HandleParam0(List<string> _params, CommandSenderInfo _senderInfo)
         {
             switch (_params[0])
             {
@@ -66,16 +66,74 @@ namespace LcbRemote
                     SdtdConsole.Instance.Output($"Debug Mode has successfully been {(ModApi.DebugMode ? "enabled" : "disabled")}.");
                     return true;
                 case "check":
-                    SdtdConsole.Instance.Output("Not yet implemented.");
-                    return true;
+                    if (PlayerIsOnline(_senderInfo))
+                    {
+                        var entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
+                        if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out var player))
+                        {
+                            SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
+                            return true;
+                        }
+                        var playerBlockPos = player.GetBlockPosition();
+                        if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out var landClaimBlockPos, out var landClaimOwner))
+                        {
+                            SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
+                            return true;
+                        }
+                        var landClaimActive = LandClaimManager.IsLandClaimActive(landClaimBlockPos);
+                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
+                        return true;
+                    }
+                    break;
                 case "activate":
-                    SdtdConsole.Instance.Output("Not yet implemented.");
-                    return true;
+                    if (PlayerIsOnline(_senderInfo))
+                    {
+                        SdtdConsole.Instance.Output("Not yet implemented.");
+                        return true;
+                    }
+                    break;
                 case "deactivate":
-                    SdtdConsole.Instance.Output("Not yet implemented.");
-                    return true;
+                    if (PlayerIsOnline(_senderInfo))
+                    {
+                        SdtdConsole.Instance.Output("Not yet implemented.");
+                        return true;
+                    }
+                    break;
             }
             return false;
+        }
+
+        private bool PlayerIsOnline(CommandSenderInfo _senderInfo)
+        {
+            if (SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo) != -1)
+            {
+                return true;
+            }
+            SingletonMonoBehaviour<SdtdConsole>.Instance.Output("Cannot execute from telnet/rcon, please execute as a client.");
+            return false;
+        }
+
+        private static bool TryGetPlayerBlockPosition(ClientInfo clientInfo, out Vector3i blockPos)
+        {
+            if (!TryGetEntityPlayerFor(clientInfo, out var player))
+            {
+                blockPos = Vector3i.zero;
+                return false;
+            }
+            blockPos = player.GetBlockPosition();
+            return true;
+        }
+
+        private static bool TryGetEntityPlayerFor(ClientInfo clientInfo, out EntityPlayer player)
+        {
+            return GameManager.Instance.World.Players.dict.TryGetValue(SafelyGetEntityIdFor(clientInfo), out player);
+        }
+
+        private static int SafelyGetEntityIdFor(ClientInfo clientInfo)
+        {
+            return clientInfo != null
+                ? clientInfo.entityId
+                : GameManager.Instance.persistentLocalPlayer.EntityId;
         }
     }
 }

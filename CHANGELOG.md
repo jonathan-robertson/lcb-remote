@@ -7,15 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [TODO]
 
-- add admin command to toggle any lcb
 - add console command activate
-- add console command check
 - add console command deactivate
 - add lcb-remote item
+- add lcb-remote item activation toggle lcb
 - add lcb-remote recipe
 - add lcb-remote to trader inventory
-- add logic to have server toggle lcb
 
 ## [UNRELEASED]
 
+- add console command check
 - add console command debug
