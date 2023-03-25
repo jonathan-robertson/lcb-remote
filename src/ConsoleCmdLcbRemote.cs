@@ -42,8 +42,40 @@ namespace LcbRemote
 
         public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
         {
-            SdtdConsole.Instance.Output("Not yet implemented.");
-            throw new NotImplementedException();
+            try
+            {
+                if (_params.Count > 0
+                    && HandleParam0(_params))
+                {
+                    return;
+                }
+                SdtdConsole.Instance.Output($"Invald parameter provided; use 'help {Commands[0]}' to learn more.");
+            }
+            catch (Exception e)
+            {
+                SdtdConsole.Instance.Output($"Exception encountered: \"{e.Message}\"\n{e.StackTrace}");
+            }
+        }
+
+        private bool HandleParam0(List<string> _params)
+        {
+            switch (_params[0])
+            {
+                case "debug":
+                    ModApi.DebugMode = !ModApi.DebugMode;
+                    SdtdConsole.Instance.Output($"Debug Mode has successfully been {(ModApi.DebugMode ? "enabled" : "disabled")}.");
+                    return true;
+                case "check":
+                    SdtdConsole.Instance.Output("Not yet implemented.");
+                    return true;
+                case "activate":
+                    SdtdConsole.Instance.Output("Not yet implemented.");
+                    return true;
+                case "deactivate":
+                    SdtdConsole.Instance.Output("Not yet implemented.");
+                    return true;
+            }
+            return false;
         }
     }
 }
