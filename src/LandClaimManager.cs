@@ -9,11 +9,40 @@
         /// </summary>
         /// <param name="lcbBlockPos">Vector3i block position of the land claim to check.</param>
         /// <returns>Whether the land claim at the given coordinates is active (showing bounds for its owner).</returns>
-        public static bool IsLandClaimActive(Vector3i lcbBlockPos)
+        public static bool IsLandClaimActive(Vector3i lcbBlockPos, out bool currentlyActive)
         {
             var world = GameManager.Instance.World;
             var chunkId = world.ChunkCache.ClusterIdx;
-            return world.GetTileEntity(chunkId, lcbBlockPos) is TileEntityLandClaim tileEntityLandClaim && tileEntityLandClaim.ShowBounds;
+            if (world.GetTileEntity(chunkId, lcbBlockPos) is TileEntityLandClaim tileEntityLandClaim)
+            {
+                currentlyActive = tileEntityLandClaim.ShowBounds;
+                return true;
+            }
+            currentlyActive = false;
+            return false;
+        }
+
+        /// <summary>
+        /// Activate the land claim at the given coordinates.
+        /// </summary>
+        /// <param name="lcbBlockPos">Vector3i block position of the land claim to activate.</param>
+        /// <param name="previouslyActive">Whether this land claim was already active.</param>
+        /// <returns>Whether the land claim could be found at the given position.</returns>
+        public static bool ActivateLandClaim(Vector3i lcbBlockPos, out bool previouslyActive)
+        {
+            var world = GameManager.Instance.World;
+            var chunkId = world.ChunkCache.ClusterIdx;
+            if (world.GetTileEntity(chunkId, lcbBlockPos) is TileEntityLandClaim tileEntityLandClaim)
+            {
+                previouslyActive = tileEntityLandClaim.ShowBounds;
+                if (!previouslyActive)
+                {
+                    tileEntityLandClaim.ShowBounds = true;
+                }
+                return true;
+            }
+            previouslyActive = false;
+            return false;
         }
 
         /// <summary>

@@ -80,7 +80,11 @@ namespace LcbRemote
                             SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
                             return true;
                         }
-                        var landClaimActive = LandClaimManager.IsLandClaimActive(landClaimBlockPos);
+                        if (!LandClaimManager.IsLandClaimActive(landClaimBlockPos, out var landClaimActive))
+                        {
+                            SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
+                            return true;
+                        }
                         SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
                         return true;
                     }
@@ -88,7 +92,29 @@ namespace LcbRemote
                 case "activate":
                     if (PlayerIsOnline(_senderInfo))
                     {
-                        SdtdConsole.Instance.Output("Not yet implemented.");
+                        var entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
+                        if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out var player))
+                        {
+                            SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
+                            return true;
+                        }
+                        var playerBlockPos = player.GetBlockPosition();
+                        if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out var landClaimBlockPos, out var landClaimOwner))
+                        {
+                            SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
+                            return true;
+                        }
+                        if (!LandClaimManager.ActivateLandClaim(landClaimBlockPos, out var previouslyActive))
+                        {
+                            SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
+                            return true;
+                        }
+                        if (previouslyActive)
+                        {
+                            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and was already active (no action taken).");
+                            return true;
+                        }
+                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been activated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
                         return true;
                     }
                     break;
