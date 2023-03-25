@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [TODO]
 
-- add console command deactivate
 - add lcb-remote item
 - add lcb-remote item activation toggle lcb
 - add lcb-remote recipe
@@ -17,4 +16,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add console command activate
 - add console command check
+- add console command deactivate
 - add console command debug

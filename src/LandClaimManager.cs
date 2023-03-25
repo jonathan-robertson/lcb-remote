@@ -23,7 +23,7 @@
         }
 
         /// <summary>
-        /// Activate the land claim at the given coordinates.
+        /// Activate the land claim at the given position.
         /// </summary>
         /// <param name="lcbBlockPos">Vector3i block position of the land claim to activate.</param>
         /// <param name="previouslyActive">Whether this land claim was already active.</param>
@@ -42,6 +42,29 @@
                 return true;
             }
             previouslyActive = false;
+            return false;
+        }
+
+        /// <summary>
+        /// Deactivate the land claim at the given position.
+        /// </summary>
+        /// <param name="lcbBlockPos">Vector3i block position of the land claim to deactivate.</param>
+        /// <param name="previouslyInactive">Whether this land claim was already inactive.</param>
+        /// <returns>Whether the land claim could be found at the given position.</returns>
+        public static bool DeactivateLandClaim(Vector3i lcbBlockPos, out bool previouslyInactive)
+        {
+            var world = GameManager.Instance.World;
+            var chunkId = world.ChunkCache.ClusterIdx;
+            if (world.GetTileEntity(chunkId, lcbBlockPos) is TileEntityLandClaim tileEntityLandClaim)
+            {
+                previouslyInactive = !tileEntityLandClaim.ShowBounds;
+                if (!previouslyInactive)
+                {
+                    tileEntityLandClaim.ShowBounds = false;
+                }
+                return true;
+            }
+            previouslyInactive = false;
             return false;
         }
 

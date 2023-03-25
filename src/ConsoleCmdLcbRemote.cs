@@ -59,6 +59,11 @@ namespace LcbRemote
 
         private bool HandleParam0(List<string> _params, CommandSenderInfo _senderInfo)
         {
+            int entityId;
+            Vector3i playerBlockPos, landClaimBlockPos;
+            EntityPlayer player;
+            PersistentPlayerData landClaimOwner;
+
             switch (_params[0])
             {
                 case "debug":
@@ -66,76 +71,91 @@ namespace LcbRemote
                     SdtdConsole.Instance.Output($"Debug Mode has successfully been {(ModApi.DebugMode ? "enabled" : "disabled")}.");
                     return true;
                 case "check":
-                    if (PlayerIsOnline(_senderInfo))
+                    if (SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo) == -1)
                     {
-                        var entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
-                        if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out var player))
-                        {
-                            SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
-                            return true;
-                        }
-                        var playerBlockPos = player.GetBlockPosition();
-                        if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out var landClaimBlockPos, out var landClaimOwner))
-                        {
-                            SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
-                            return true;
-                        }
-                        if (!LandClaimManager.IsLandClaimActive(landClaimBlockPos, out var landClaimActive))
-                        {
-                            SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
-                            return true;
-                        }
-                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
+                        SdtdConsole.Instance.Output("Cannot execute from telnet/rcon, please execute as a client.");
                         return true;
                     }
-                    break;
+                    entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
+                    if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out player))
+                    {
+                        SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
+                        return true;
+                    }
+                    playerBlockPos = player.GetBlockPosition();
+                    if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out landClaimBlockPos, out landClaimOwner))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
+                        return true;
+                    }
+                    if (!LandClaimManager.IsLandClaimActive(landClaimBlockPos, out var landClaimActive))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
+                        return true;
+                    }
+                    SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
+                    return true;
                 case "activate":
-                    if (PlayerIsOnline(_senderInfo))
+                    if (SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo) == -1)
                     {
-                        var entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
-                        if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out var player))
-                        {
-                            SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
-                            return true;
-                        }
-                        var playerBlockPos = player.GetBlockPosition();
-                        if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out var landClaimBlockPos, out var landClaimOwner))
-                        {
-                            SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
-                            return true;
-                        }
-                        if (!LandClaimManager.ActivateLandClaim(landClaimBlockPos, out var previouslyActive))
-                        {
-                            SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
-                            return true;
-                        }
-                        if (previouslyActive)
-                        {
-                            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and was already active (no action taken).");
-                            return true;
-                        }
-                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been activated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
+                        SdtdConsole.Instance.Output("Cannot execute from telnet/rcon, please execute as a client.");
                         return true;
                     }
-                    break;
+                    entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
+                    if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out player))
+                    {
+                        SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
+                        return true;
+                    }
+                    playerBlockPos = player.GetBlockPosition();
+                    if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out landClaimBlockPos, out landClaimOwner))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
+                        return true;
+                    }
+                    if (!LandClaimManager.ActivateLandClaim(landClaimBlockPos, out var previouslyActive))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
+                        return true;
+                    }
+                    if (previouslyActive)
+                    {
+                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} and was already active (no action taken).");
+                        return true;
+                    }
+                    SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been activated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
+                    return true;
                 case "deactivate":
-                    if (PlayerIsOnline(_senderInfo))
+                    if (SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo) == -1)
                     {
-                        SdtdConsole.Instance.Output("Not yet implemented.");
+                        SdtdConsole.Instance.Output("Cannot execute from telnet/rcon, please execute as a client.");
                         return true;
                     }
-                    break;
+                    entityId = SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo);
+                    if (!GameManager.Instance.World.Players.dict.TryGetValue(entityId, out player))
+                    {
+                        SdtdConsole.Instance.Output($"Could find online player with entityId of {entityId}.");
+                        return true;
+                    }
+                    playerBlockPos = player.GetBlockPosition();
+                    if (!LandClaimManager.TryGetLandClaimPosContaining(playerBlockPos, out landClaimBlockPos, out landClaimOwner))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim contains block position {playerBlockPos}.");
+                        return true;
+                    }
+                    if (!LandClaimManager.DeactivateLandClaim(landClaimBlockPos, out var previouslyDeactivated))
+                    {
+                        SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
+                        return true;
+                    }
+                    if (previouslyDeactivated)
+                    {
+                        SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} and was already deactivated (no action taken).");
+                        return true;
+                    }
+                    SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been deactivated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
+                    return true;
             }
-            return false;
-        }
-
-        private bool PlayerIsOnline(CommandSenderInfo _senderInfo)
-        {
-            if (SafelyGetEntityIdFor(_senderInfo.RemoteClientInfo) != -1)
-            {
-                return true;
-            }
-            SingletonMonoBehaviour<SdtdConsole>.Instance.Output("Cannot execute from telnet/rcon, please execute as a client.");
             return false;
         }
 
