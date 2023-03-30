@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add lcb-remote item activation toggle lcb
 - add lcb-remote recipe
 - add lcb-remote to trader inventory
+- add support for multiple overlapping lcbs
 
 ## [UNRELEASED]
 

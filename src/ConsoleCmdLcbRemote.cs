@@ -153,7 +153,7 @@ namespace LcbRemote
                         SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} and was already deactivated (no action taken).");
                         return true;
                     }
-                    SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been deactivated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
+                    SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been deactivated just now.");
                     return true;
             }
             return false;
