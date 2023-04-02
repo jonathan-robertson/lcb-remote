@@ -6,9 +6,9 @@
   - [Summary](#summary)
   - [PLANNED Player Features](#planned-player-features)
   - [Admin Commands](#admin-commands)
-    - [check](#check)
-    - [activate](#activate)
-    - [deactivate](#deactivate)
+    - [lcbr check](#lcbr-check)
+    - [lcbr activate](#lcbr-activate)
+    - [lcbr deactivate](#lcbr-deactivate)
 
 ## Summary
 
@@ -24,17 +24,17 @@ This mod adds commands for checking and adjusting any land claim block's activat
 
 > ℹ️ When adjusted, the mod will send packages that trick the client into reloading that land claim block's state for the owner (if the owner is online and within range). This means that the land claim owner will not need to log in/out to see the boundaries for this claim appear or disappear when the block's state is modified by the admin.
 
-### check
+### lcbr check
 
 Check the current activation state of the lcb you are within range of.
 
-### activate
+### lcbr activate
 
 Activate lcb area frame for the lcb you are within range of (only the lcb owner will see it).
 
 > ℹ️ When this command is run, the land claim block's owner will see an immediate change to the boundaries without having to leave/return or logout/login.
 
-### deactivate
+### lcbr deactivate
 
 Deactivate lcb area frame for the lcb you are within range of.
 
