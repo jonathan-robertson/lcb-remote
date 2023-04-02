@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add lcb-remote item activation toggle lcb
 - add lcb-remote recipe
 - add lcb-remote to trader inventory
-- add support for multiple overlapping lcbs
 
-## [UNRELEASED]
+## [0.1.0] - 2023-04-02
 
 - add console command activate
 - add console command check
 - add console command deactivate
 - add console command debug
+- add support for selecting closest overlapping lcb

@@ -6,7 +6,7 @@ namespace LcbRemote
     {
         private static readonly ModLog<ModApi> _log = new ModLog<ModApi>();
 
-        public static bool DebugMode { get; set; } = true; // TODO: disable before release
+        public static bool DebugMode { get; set; } = false;
         public static bool IsServer { get; private set; }
         public static int LandClaimSize { get; private set; }
         public static int LandClaimRadius { get; private set; }
@@ -20,7 +20,7 @@ namespace LcbRemote
         {
             try
             {
-                IsServer = SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer;
+                IsServer = ConnectionManager.Instance.IsServer;
                 if (IsServer)
                 {
                     _log.Trace("OnGameStartDone");

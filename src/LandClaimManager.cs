@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LcbRemote
 {
@@ -76,10 +77,10 @@ namespace LcbRemote
         /// Get the position and owner of the land claim contiaining the given block coordinates (if such a land claim exists).
         /// </summary>
         /// <param name="blockPos">Vector3i block position contained within the returned land claim (if one exists).</param>
-        /// <param name="landClaimBlockPos">Vector3i block position of the land claim containing the given block position (if one exists).</param>
         /// <param name="landClaimOwner">The owner of the land claim containing the given block position (if one exists).</param>
+        /// <param name="landClaimBlockPos">Vector3i block position of the land claim containing the given block position (if one exists).</param>
         /// <returns>Whether a land claim containing the given block position was located.</returns>
-        public static bool TryGetLandClaimPosContaining(Vector3i blockPos, out Vector3i landClaimBlockPos, out PersistentPlayerData landClaimOwner)
+        public static bool TryGetLandClaimPosContaining(Vector3i blockPos, out PersistentPlayerData landClaimOwner, out Vector3i landClaimBlockPos)
         {
             foreach (var kvp in GameManager.Instance.persistentPlayers.m_lpBlockMap)
             {
@@ -95,6 +96,64 @@ namespace LcbRemote
             return false;
         }
 
+        /// <summary>
+        /// Get the position and owner of the closest land claim also containing the given block coordinates (if such a land claim exists).
+        /// </summary>
+        /// <param name="blockPos">Vector3i block position contained within the returned land claim (if one exists).</param>
+        /// <param name="landClaimOwner">The owner of the land claim containing the given block position (if one exists).</param>
+        /// <param name="landClaimBlockPos">Vector3i block position of the land claim containing the given block position (if one exists).</param>
+        /// <returns></returns>
+        public static bool TryGetClosestLandClaimPosContaining(Vector3i blockPos, out PersistentPlayerData landClaimOwner, out Vector3i landClaimBlockPos)
+        {
+            if (!TryGetLandClaimPositionsContaining(blockPos, out landClaimOwner, out var landClaimBlockPositionsContaining))
+            {
+                landClaimOwner = null;
+                landClaimBlockPos = Vector3i.zero;
+                return false;
+            }
+
+            landClaimBlockPos = GetClosestLandClaimPosition(blockPos, landClaimBlockPositionsContaining);
+            return true;
+        }
+
+        public static bool TryGetLandClaimPositionsContaining(Vector3i blockPos, out PersistentPlayerData landClaimOwner, out List<Vector3i> landClaimBlockPositions)
+        {
+            landClaimOwner = null;
+            landClaimBlockPositions = new List<Vector3i>();
+            foreach (var kvp in GameManager.Instance.persistentPlayers.m_lpBlockMap)
+            {
+                if (IsWithinLandClaimAtBlockPos(blockPos, kvp.Key))
+                {
+                    landClaimBlockPositions.Add(kvp.Key);
+                    landClaimOwner = kvp.Value;
+                }
+            }
+            return landClaimBlockPositions.Count > 0;
+        }
+
+        public static Vector3i GetClosestLandClaimPosition(Vector3i blockPos, List<Vector3i> landClaimPositions)
+        {
+            if (landClaimPositions.Count == 0)
+            {
+                return Vector3i.zero;
+            }
+            var closestLandClaimPos = landClaimPositions[0];
+            var shortestDistance = Distance(blockPos, closestLandClaimPos);
+            if (landClaimPositions.Count > 1)
+            {
+                for (var i = 1; i < landClaimPositions.Count; i++)
+                {
+                    var thisDistance = Distance(blockPos, landClaimPositions[i]);
+                    if (thisDistance < shortestDistance)
+                    {
+                        shortestDistance = thisDistance;
+                        closestLandClaimPos = landClaimPositions[i];
+                    }
+                }
+            }
+            return closestLandClaimPos;
+        }
+
         private static bool IsWithinLandClaimAtBlockPos(Vector3i blockPos, Vector3i landClaimPos)
         {
             return landClaimPos.x - ModApi.LandClaimRadius - 1 <= blockPos.x
@@ -103,6 +162,13 @@ namespace LcbRemote
                     && blockPos.z <= landClaimPos.z + ModApi.LandClaimRadius + 1;
         }
 
+        /// <summary>
+        /// To trigger a client-side update of LCB Bounds, the client either needs to reload the LCB block (done via chunk reload) by leaving and returning or logging out... or trigger an OnBlockAdded call since this method checks for an existing TileEntityLandClaim object and properly applies its ShowBounds variable.
+        /// 
+        /// It's unfortunate that the OnBlockChanged flow always *ignores* the TileEntityLandClaim.ShowBounds value and sets bounds to false... but this method spoofs a fake block type change on the LCB, re-sends the TileEntityLandClaim update (with the updated ShowBounds value) and then sets the block type back to being an LCB. This triggers a call to OnBlockAdded without also purging TileEntityLandClaim from the block's position.
+        /// </summary>
+        /// <param name="lcbBlockPos">Vector3i block position of the Land Claim block to modify.</param>
+        /// <param name="tileEntityLandClaim">TileEntityLandClaim at the given lcbBlockPos coordinates.</param>
         private static void TriggerTileChangesForOwner(Vector3i lcbBlockPos, TileEntityLandClaim tileEntityLandClaim)
         {
             _log.Trace("TriggerTileChangesForOwner");
@@ -133,87 +199,23 @@ namespace LcbRemote
                 return;
             }
 
-            if (foundPlayer && playerWithinVisibleRange)
-            {
-                _log.Trace("player found and within visible range; sending package to player to remove/re-add LCB");
+            _log.Trace("player found and within visible range; sending package to player to spoof block type and trigger OnBlockAdded flow to update client-side LCB Bounds state.");
 
-                var blockValue = tileEntityLandClaim.blockValue;
-                var originalType = blockValue.type;
-                blockValue.type = 1;
-                var newTypePackage = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>() {
-                    new BlockChangeInfo(lcbBlockPos, blockValue, false),
-                }, -1);
+            var blockValue = tileEntityLandClaim.blockValue;
+            var originalType = blockValue.type;
+            blockValue.type = 1;
+            var spoofedTypePackage = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>() {
+                new BlockChangeInfo(lcbBlockPos, blockValue, false),
+            }, -1);
+            blockValue.type = originalType;
+            var originalTypePackage = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>() {
+                new BlockChangeInfo(lcbBlockPos, blockValue, false),
+            }, -1);
+            _ = NetPackageManager.GetPackage<NetPackageTileEntity>().Setup(tileEntityLandClaim, TileEntity.StreamModeWrite.ToClient, byte.MaxValue);
 
-                blockValue.type = originalType;
-                var originalTypePackage = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>() {
-                    new BlockChangeInfo(lcbBlockPos, blockValue, false),
-                }, -1);
-
-                //_log.Trace($"changeBlockValueLandClaimNewRotation; bChangeBlockValue: {changeBlockValueLandClaimNewRotation.bChangeBlockValue}");
-
-                // TODO: DO NOT SET TO AIR (it wipes the TileEntity when we do)
-                _ = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>() {
-                    new BlockChangeInfo(lcbBlockPos, BlockValue.Air, false),
-                }, -1);
-                _ = NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, new List<BlockChangeInfo>()
-                {
-                    //new BlockChangeInfo(lcbBlockPos, BlockValue.Air, false),
-                    //changeBlockValueLandClaimNewRotation, // TODO: confirm correct bools (2 of them)
-                    // maybe we change damage; blockChangeInfo.bChangeDamage or maybe this won't make a difference...
-                }, -1);
-                var tileEntityPackage = NetPackageManager.GetPackage<NetPackageTileEntity>().Setup(tileEntityLandClaim, TileEntity.StreamModeWrite.ToClient, byte.MaxValue);
-
-                //clientInfo.SendPackage(removeBlockPackage); // this reliably removes frame on client
-
-                //clientInfo.SendPackage(tileEntityPackage); // does not make any difference
-
-                // TODO: try adding harmony hooks in local mod to track movement in client
-
-                // TODO: swapping block type will be necessary in order to trigger blockAdded..
-                //  The easiest way to do this would be to remove/add the block, but removing deletes the underlying TileEntity which we need to keep.
-                //  Instead, switching blockType may work.
-                //   TODO: confirm if switching to a different block type (temporarily) will purge the existing TileEntityLandClaim
-                // To enable showBounds field on the client, the tileEntity must already exist.
-                clientInfo.SendPackage(newTypePackage);
-                // TODO: should we re-send the TileEntity here?
-                clientInfo.SendPackage(tileEntityPackage);
-                clientInfo.SendPackage(originalTypePackage);
-
-                //clientInfo.SendPackage(tileEntityPackage); // this allows client to interact with lcb once again
-
-                //tileEntityLandClaim.SetChunkModified(); // TODO: ?
-
-                /* NOTE: the below code *partially* works, but maybe not for the reason I'm hoping.
-                 * Currently looking into these possibilities...
-                 * NetPackageSetBlock.ProcessPackage(World, GameManager) : void @06003229
-                 * GameManager.ChangeBlocks(PlatformUserIdentifierAbs, List<BlockChangeInfo>) : void @06005F06
-                 * ChunkCluster.SetBlock(Vector3i, bool, BlockValue, bool, sbyte, bool, bool, bool) : BlockValue @06003E2E
-                 * Chunk.SetBlock(WorldBase, int, int, int, int, BlockValue, bool, bool) : BlockValue @06003D45
-
-                // TODO: try damaging a little?
-                var changeBlockValueAir = new BlockChangeInfo(lcbBlockPos, BlockValue.Air, false);
-                var blockChangeInfoList = new List<BlockChangeInfo>() {
-                    changeBlockValueAir,
-                    //new BlockChangeInfo(lcbBlockPos, tileEntityLandClaim.blockValue, false), // TODO: confirm correct bools (2 of them)
-                };
-                clientInfo.SendPackage(NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, blockChangeInfoList, -1));
-                // interesting... setting to Air (removing) then adding back the same object results in the frame disappearing, but now
-                //  prevents the player from interacting with his lcb the normal way.
-
-                var changeBlockValueLandClaimNewRotation = new BlockChangeInfo(lcbBlockPos, tileEntityLandClaim.blockValue, false);
-                _log.Trace($"changeBlockValueLandClaimNewRotation; bChangeBlockValue: {changeBlockValueLandClaimNewRotation.bChangeBlockValue}");
-                var blockChangeInfoList2 = new List<BlockChangeInfo>() {
-                    //new BlockChangeInfo(lcbBlockPos, BlockValue.Air, false),
-                    changeBlockValueLandClaimNewRotation, // TODO: confirm correct bools (2 of them)
-                };
-                clientInfo.SendPackage(NetPackageManager.GetPackage<NetPackageSetBlock>().Setup(ownerPlayerData, blockChangeInfoList2, -1));
-
-                // This... or some *part* of this does allow us to regain our ability to interact with the LCB after modifying it
-                //tileEntityLandClaim.SetChunkModified();
-                //SingletonMonoBehaviour<ConnectionManager>.Instance.SendPackage(NetPackageManager.GetPackage<NetPackageTileEntity>().Setup(tileEntityLandClaim, TileEntity.StreamModeWrite.ToClient, byte.MaxValue), true, -1, -1, -1, -1);
-
-                */
-            }
+            clientInfo.SendPackage(spoofedTypePackage);
+            //clientInfo.SendPackage(tileEntityPackage); // add tileEntity again since it was likely wiped out by the type change above
+            clientInfo.SendPackage(originalTypePackage);
         }
 
         private static bool AreWithinVisibleRange(Vector3i pos1, Vector3i pos2)
@@ -223,6 +225,15 @@ namespace LcbRemote
                     && pos2.x <= pos1.x + viewDistance + 1
                 && pos1.z - viewDistance - 1 <= pos2.z
                     && pos2.z <= pos1.z + viewDistance + 1;
+        }
+
+        // lifted from Vector3.Distance method and reapplied here
+        private static float Distance(Vector3i a, Vector3i b)
+        {
+            float num = a.x - b.x;
+            float num2 = a.y - b.y;
+            float num3 = a.z - b.z;
+            return (float)Math.Sqrt((num * num) + (num2 * num2) + (num3 * num3));
         }
     }
 }
