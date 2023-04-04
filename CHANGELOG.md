@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [TODO]
 
 - add lcb-remote item
+  - update hand-model for item to no longer map to... anything?
+  - Or... maybe if we can render in a pole, this could feel like an antenna?
+  - HandType is perfect, though, as it currently is: torch is excellent.
+- add new louder sound for `button4`
 - add lcb-remote item activation toggle lcb
 - add lcb-remote recipe
 - add lcb-remote to trader inventory

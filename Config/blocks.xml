@@ -1,0 +1,36 @@
+<config>
+    <append xpath="/blocks">
+        <block name="wallLcbRemote">
+            <property name="CustomIcon" value="pushButtonSwitch02" />
+            <property name="CustomIconTint" value="0,127,255" />
+            <property name="TintColor" value="0,127,255" />
+
+            <property name="CreativeMode" value="Dev" />
+            <property name="Class" value="Activate" />
+            <property name="ActivateSound" value="button4" />
+            <!-- <property name="IsTerrainDecoration" value="true" /> -->
+            <property name="Material" value="Mmetal" />
+            <property name="MaxDamage" value="1" />
+            <property name="StabilitySupport" value="false" /> <!-- build restriction -->
+            <property name="Shape" value="ModelEntity" />
+            <!-- <property name="Mesh" value="models" /> -->
+            <property name="Model" value="Entities/Industrial/powerSwitchButton_02Prefab" />
+            <property name="Place" value="TowardsPlacerInverted" />
+            <property name="OnlySimpleRotations" value="true" />
+            <!--<property name="ParticleName" value="candleWall_flame"/>-->
+            <property name="CanPickup" value="true" param1="lcbRemote" />
+            <property name="Collide" value="movement,melee,bullet,arrow,rocket" />
+            <property class="RepairItems">
+                <property name="resourceForgedIron" value="1" />
+            </property>
+            <drop event="Destroy" name="lcbRemote" count="1" />
+            <!-- TODO: update -->
+            <property name="DescriptionKey" value="pushButtonSwitch02" />
+            <property name="FilterTags" value="MC_building,SC_electrical" />
+            <property name="SortOrder1" value="70e2" />
+            <drop event="Fall" count="0" prob="0" />
+
+            <property name="Buff" value="buffDrugSteroids" />
+        </block>
+    </append>
+</config>

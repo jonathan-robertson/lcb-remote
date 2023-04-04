@@ -1,0 +1,179 @@
+<config>
+    <!-- 
+		<property name="Material" value="Mmetal" />
+		<property name="Shape" value="ModelEntity" />
+		<property name="Model" value="Entities/Industrial/powerSwitchButton_02Prefab" />
+
+        icon: pushButtonSwitch02
+
+
+        
+            <property name="Meshfile" value="#Other/Items?Tools/pickaxe_ironPrefab.prefab"/>
+ -->
+
+    <append xpath="/items">
+        <item name="lcbRemote">
+            <property name="Class" value="ItemClassTorch" />
+
+            <property name="CustomIcon" value="pushButtonSwitch02" />
+            <property name="CustomIconTint" value="0,127,255" />
+            <property name="TintColor" value="0,127,255" />
+
+            <!-- torch -->
+            <property name="HoldType" value="12" />
+
+            <!-- flashlight -->
+            <!-- <property name="HoldType" value="13" /> -->
+
+            <!-- thrownAmmoMolotovCocktail -->
+            <!-- <property name="HoldType" value="54" /> -->
+
+            <!-- bandage -->
+            <!-- <property name="HoldType" value="64" /> -->
+
+            <!-- Ratchet -->
+            <!-- <property name="HoldType" value="72" /> -->
+
+            <!-- painkillers -->
+            <!-- <property name="HoldType" value="16" /> -->
+
+            <!-- foodHoney -->
+            <!-- <property name="HoldType" value="31"/> -->
+
+            <!-- resourceBrokenGlass: palm up, hand slightly curled -->
+            <!-- <property name="HoldType" value="23" /> -->
+
+
+            <property name="Tags" value="tool,noMods" />
+            <property name="Meshfile" value="#Other/Items?Health/painkillersPrefab.prefab" />
+            <!-- <property name="Meshfile" value="Entities/Industrial/powerSwitchOff_02Prefab" /> -->
+            <!-- <property name="HandMeshfile" value="Entities/Plumbing/pipe_valvePrefab" /> -->
+            <!-- <property name="HandMeshfile" value="Entities/Industrial/powerSwitchButton_01Prefab" /> -->
+            <!-- <property name="HandMeshfile" value="Entities/Industrial/powerSwitchButton_02Prefab" /> -->
+            <!-- HandMeshfile ? -->
+            <property name="DropMeshfile" value="Entities/Industrial/powerSwitchButton_02Prefab" />
+            <!-- <property name="DropScale" value=".6" /> -->
+            <property name="Material" value="Mmetal" />
+            <property name="Stacknumber" value="1" />
+            <property name="EconomicValue" value="24" />
+
+            <!-- <property name="PlaySoundOnActivate" value="button4" /> -->
+            <!-- <property name="ActivateSound" value="button4" /> -->
+
+            <!--             
+            <property class="Action0">
+                <property name="Class" value="Eat"/>
+                <property name="Delay" value="1.0"/>
+                <property name="UseAnimation" value="false"/>
+                <property name="Use_time" value="..."/>
+                <property name="Sound_start" value="read_mod"/>
+                <property name="Sound_in_head" value="true"/>
+            </property>
+-->
+
+
+            <!-- <property name="ActivateObject" value="lightSource" /> -->
+
+            <!-- Pimp Mining Helmet Example (multiple parts)    
+            <effect_group name="pimpMiningHelmetAdmin" tiered="false">
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="HeadLight" prefab="Entities/Industrial/powerSwitchButton_02Prefab" parentTransform="Spotlight" localPos="0,0,2" localRot="90,0,0" />
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="HeadLightCam" prefab="Entities/Industrial/powerSwitchButton_02Prefab" parentTransform="CameraNode" localPos="0,0,2" localRot="-90,0,0" />
+                <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="HeadLight" />
+                <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="HeadLightCam" />
+                <triggered_effect trigger="onSelfItemActivate" action="SetPartActive" part="HeadLight" active="@!.IsFPV" />
+                <triggered_effect trigger="onSelfItemActivate" action="SetPartActive" part="HeadLightCam" active="@.IsFPV" />
+                <triggered_effect trigger="onSelfItemDeactivate" action="SetPartActive" part="HeadLight" active="false" />
+                <triggered_effect trigger="onSelfItemDeactivate" action="SetPartActive" part="HeadLightCam" active="false" />
+            </effect_group>
+-->
+
+            <!-- Night Vision Example (FPV/TPV)
+            <effect_group tiered="false">
+                <requirement name="IsLocalPlayer"/>
+                <triggered_effect trigger="onSelfItemActivate" action="ModifyScreenEffect" effect_name="NightVision" intensity="1" fade="0"/>
+                <triggered_effect trigger="onSelfItemDeactivate" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0"/>
+                <triggered_effect trigger="onSelfEquipStop" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0"/>
+
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="HeadLightTPV" prefab="ScreenEffects/DeferredNV/NVGLight" parentTransform="Spotlight" localPos="0,0,0" localRot="90,0,0"/>
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="HeadLightFPV" prefab="ScreenEffects/DeferredNV/NVGLight" parentTransform="CameraNode" localPos="0,0,.1" localRot="-90,0,0"/>
+                <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="HeadLightTPV"/>
+                <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="HeadLightFPV"/>
+                <triggered_effect trigger="onSelfItemActivate" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+                <triggered_effect trigger="onSelfItemActivate" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+                <triggered_effect trigger="onSelfItemDeactivate" action="SetPartActive" part="HeadLightTPV" active="false"/>
+                <triggered_effect trigger="onSelfItemDeactivate" action="SetPartActive" part="HeadLightFPV" active="false"/>
+                <triggered_effect trigger="onSelfChangedView" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+                <triggered_effect trigger="onSelfChangedView" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+            </effect_group>
+ -->
+
+            <!-- Knuckle Wraps example (props, hand attachment)
+    		<triggered_effect trigger="onSelfEquipStart" action="AddPart" part="LeftKnuckles" prefab="#Other/Items?Weapons/Melee/KnuckleWraps/knuckleWrapsLeft_Prefab.prefab" parentTransform="Propjoint" localPos="0,0,0" localRot="0,0,0">
+                <requirement name="IsFPV"/>
+            </triggered_effect>
+            <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="LeftKnuckles" prefab="#Other/Items?Weapons/Melee/KnuckleWraps/knuckleWrapsLeft_Prefab.prefab" parentTransform="LeftHand" localPos="-0.091,-0.0075,-0.00077" localRot="3.841982,9.94,94.3">
+                <requirement name="!IsFPV"/>
+            </triggered_effect>
+            <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="LeftKnuckles"/>
+  -->
+
+            <effect_group name="holdingLcbRemote" tiered="false">
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="LcbRemote" prefab="Entities/Industrial/powerSwitchButton_02Prefab" parentTransform="RightHand" localPos=".2,.25,.2" localRot="-45,0,0">
+                    <requirement name="IsFPV" />
+                </triggered_effect>
+                <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="LcbRemote" prefab="Entities/Industrial/powerSwitchButton_02Prefab" parentTransform="RightHand" localPos=".275,.145,-.155" localRot="-15,105,0">
+                    <requirement name="!IsFPV" />
+                </triggered_effect>
+                <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="LcbRemote" />
+            </effect_group>
+            <effect_group tiered="false">
+                <!-- <triggered_effect trigger="onSelfPrimaryActionEnd" action="PlaySound" sound="spawnInStinger" /> -->
+                <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffDrugSteroids" />
+                <!-- TODO: add explanation of what this remote controls -->
+                <!-- <display_value name="dStopsFragileMemory" value="1" /> -->
+            </effect_group>
+
+            <property class="Action0">
+                <property name="Class" value="Activate" />
+                <property name="Delay" value=".5" />
+                <property name="Sound_start" value="button4" />
+                <!-- TODO: add hidden buff flag? -->
+            </property>
+
+            <!-- <property class="Action0">
+                <property name="Class" value="DynamicMelee" />
+                <property name="Sound_start" value="button4" />
+            </property> -->
+
+
+            <!-- <property name="Sphere" value=".1" /> -->
+            <!-- <property name="DamageType" value="Heat" /> -->
+            <!-- <property name="ToolCategory.harvestingTools" value=".5" param1="1" /> -->
+
+            <!-- <property name="UseGrazingHits" value="true" /> -->
+            <!-- <property name="GrazeStart" value=".3" /> -->
+            <!-- <property name="GrazeEnd" value=".35" /> -->
+            <!-- <property name="SwingDegrees" value="65" /> -->
+            <!-- <property name="SwingAngle" value="90" /> -->
+
+            <property class="Action1">
+                <property name="Class" value="PlaceAsBlock" />
+                <property name="Blockname" value="wallLcbRemote" />
+            </property>
+
+            <!-- <effect_group name="light/douse always" tiered="false">
+                <triggered_effect trigger="onSelfEquipStart" action="AttachParticleEffectToEntity" particle="p_candle_firstperson" parent_transform=".item">
+                    <requirement name="CVarCompare" cvar="_underwater" operation="LT" value="1" />
+                </triggered_effect>
+                <triggered_effect trigger="onSelfEquipStop" action="RemoveParticleEffectFromEntity" particle="p_candle_firstperson" />
+                <triggered_effect trigger="onSelfWaterSurface" action="AttachParticleEffectToEntity" particle="p_candle_firstperson" parent_transform=".item" />
+                <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveParticleEffectFromEntity" particle="p_candle_firstperson" />
+            </effect_group> -->
+
+            <property name="Group" value="Building" />
+            <!-- <property name="LightValue" value=".16" /> -->
+            <!-- <property name="LightSource" value="lightSource" /> -->
+            <!-- <property name="AlwaysActive" value="true" /> -->
+        </item>
+    </append>
+</config>
