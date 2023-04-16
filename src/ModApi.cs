@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
+using System.Reflection;
 
 namespace LcbRemote
 {
@@ -13,6 +15,9 @@ namespace LcbRemote
 
         public void InitMod(Mod _modInstance)
         {
+            var harmony = new Harmony(GetType().ToString());
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
+
             ModEvents.GameStartDone.RegisterHandler(OnGameStartDone);
         }
 

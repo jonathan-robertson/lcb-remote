@@ -1,0 +1,8 @@
+<config>
+    <append xpath="/buffs">
+        <buff name="lcbRemoteActivated" hidden="true">
+            <duration value="2" />
+            <!-- TODO: might need to update this -->
+        </buff>
+    </append>
+</config>

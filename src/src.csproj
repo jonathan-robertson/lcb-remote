@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCmdLcbRemote.cs" />
+    <Compile Include="EntityBuffs_Patches.cs" />
     <Compile Include="LandClaimManager.cs" />
     <Compile Include="ModApi.cs" />
     <Compile Include="ModLog.cs" />
