@@ -130,7 +130,7 @@
                 <!-- <triggered_effect trigger="onSelfPrimaryActionEnd" action="PlaySound" sound="spawnInStinger" /> -->
                 <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffDrugSteroids" />
                 <!-- TODO: add explanation of what this remote controls -->
-                <!-- <display_value name="dStopsFragileMemory" value="1" /> -->
+                <!-- <display_value name="" value="1" /> -->
             </effect_group>
 
             <property class="Action0">
