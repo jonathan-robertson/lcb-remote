@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add lcb-remote recipe
 - add lcb-remote to trader inventory'
 
+## [0.2.0] - 2024-08-17
+
+- update references for 7dtd-1.0-b336
+
 ## [0.1.0] - 2023-04-02
 
 - add console command activate
