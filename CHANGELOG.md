@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2024-08-17
 
 - update code to support 7dtd-1.0-b336
+- update ModInfo to match newer format
 - update references for 7dtd-1.0-b336
 
 ## [0.1.0] - 2023-04-02

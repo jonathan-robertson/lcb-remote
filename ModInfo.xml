@@ -1,9 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xml>
-    <ModInfo>
-        <Name value="LCB Remote" />
-        <Description value="Add admin tools and a craftable remote control to turn on/off land claim block boundaries." />
-        <Author value="Jonathan Robertson (Kanaverum)" />
-        <Version value="0.2.0" />
-        <Website value=" https:// github.com/ jonathan-robertson/ lcb-remote" />
-    </ModInfo>
+    <Name value="kanaverum-lcb-remote" />
+    <DisplayName value="LCB Remote" />
+    <Version value="0.2.0" />
+    <Description value="Add admin tools and a craftable remote control to turn on/off land claim block boundaries." />
+    <Author value="Jonathan Robertson (Kanaverum)" />
+    <Website value="https:// github.com/ jonathan-robertson/ lcb-remote" />
 </xml>
