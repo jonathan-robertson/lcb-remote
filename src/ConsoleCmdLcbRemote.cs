@@ -91,7 +91,7 @@ namespace LcbRemote
                 SdtdConsole.Instance.Output($"No land claim could be found at the expected position of {landClaimBlockPos}.");
                 return;
             }
-            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
+            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} is owned by {landClaimOwner.PlayerName.DisplayName} and is currently {(landClaimActive ? "ACTIVATED" : "DEACTIVATED")}.");
         }
 
         private void HandleActivate(CommandSenderInfo _senderInfo)
@@ -107,10 +107,10 @@ namespace LcbRemote
             }
             if (previouslyActive)
             {
-                SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} and was already active (no action taken).");
+                SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName.DisplayName} and was already active (no action taken).");
                 return;
             }
-            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been activated just now. Please remember that only the owner ({landClaimOwner.PlayerName}) will see the green land claim frame.");
+            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName.DisplayName} has been activated just now. Please remember that only the owner ({landClaimOwner.PlayerName.DisplayName}) will see the green land claim frame.");
         }
 
         private void HandleDeactivate(CommandSenderInfo _senderInfo)
@@ -126,10 +126,10 @@ namespace LcbRemote
             }
             if (previouslyDeactivated)
             {
-                SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} and was already deactivated (no action taken).");
+                SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName.DisplayName} and was already deactivated (no action taken).");
                 return;
             }
-            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName} has been deactivated just now.");
+            SdtdConsole.Instance.Output($"The Land Claim Block at position {landClaimBlockPos} owned by {landClaimOwner.PlayerName.DisplayName} has been deactivated just now.");
         }
 
         private static bool TryGetClosestLandClaimData(CommandSenderInfo _senderInfo, out PersistentPlayerData landClaimOwner, out Vector3i landClaimBlockPos)

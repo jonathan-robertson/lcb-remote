@@ -1,11 +1,9 @@
 # LCB Remote
 
-[![🧪 Tested On](https://img.shields.io/badge/🧪%20Tested%20On-1.0%20b336-blue.svg)](https://7daystodie.com/) [![📦 Automated Release](https://github.com/jonathan-robertson/lcb-remote/actions/workflows/release.yml/badge.svg)](https://github.com/jonathan-robertson/lcb-remote/actions/workflows/release.yml)
-
-- [LCB Remote](#lcb-remote)
-  - [Summary](#summary)
-  - [PLANNED Player Features](#planned-player-features)
-  - [Admin Commands](#admin-commands)
+[![🧪 Tested with 7DTD 1.2 (b27)](https://img.shields.io/badge/🧪%20Tested%20with-7DTD%201.2%20(b27)-blue.svg)](https://7daystodie.com/)
+[![✅ Dedicated Servers Supported ServerSide](https://img.shields.io/badge/✅%20Dedicated%20Servers-Supported%20Serverside-blue.svg)](https://7daystodie.com/)
+[![❌ Single Player and P2P Unupported](https://img.shields.io/badge/❌%20Single%20Player%20and%20P2P-Unsupported-red.svg)](https://7daystodie.com/)
+[![📦 Automated Release](https://github.com/jonathan-robertson/lcb-remote/actions/workflows/release.yml/badge.svg)](https://github.com/jonathan-robertson/lcb-remote/actions/workflows/release.yml)
 
 ## Summary
 
