@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2024-12-11
 
+- fix player name reference
 - update references for 7dtd-1.2-b27
 
 ## [0.2.0] - 2024-08-17
